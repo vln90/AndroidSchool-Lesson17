@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
  * @author Леонидов Василий on 2019-10-31
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MainPresenterTest {
+public class PackageInstalledPresenterTest {
 
     @Mock
     private IPackageInstalledView mPackageInstalledView;

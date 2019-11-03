@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -115,6 +116,21 @@ public class PackageInstalledPresenterTest {
         inOrder.verify(mPackageInstalledView).showData(createTestData());
 
         inOrder.verifyNoMoreInteractions();
+    }
+
+    /**
+     * Тестирование {@link PackageInstalledPresenter#detachView()}.
+     *
+     * <p> после детача, все методы не будут ничего прокидывать в {@link IPackageInstalledView}.
+     */
+    @Test
+    public void testDetachView() {
+        mMainPresenter.detachView();
+
+        mMainPresenter.loadDataAsync();
+        mMainPresenter.loadDataSync();
+
+        verifyNoMoreInteractions(mPackageInstalledView);
     }
 
     private List<InstalledPackageModel> createTestData() {

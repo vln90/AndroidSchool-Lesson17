@@ -17,6 +17,13 @@ public class InstalledPackageModel {
 
     private Drawable mAppIcon;
 
+    /**
+     * Конструктор модели.
+     *
+     * @param appName        название приложения.
+     * @param appPackageName имя пакета.
+     * @param appIcon        иконка.
+     */
     public InstalledPackageModel(@NonNull String appName,
                                  @NonNull String appPackageName,
                                  @NonNull Drawable appIcon) {

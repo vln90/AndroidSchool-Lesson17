@@ -31,16 +31,15 @@ public class PackageInstalledPresenter {
      */
     // Данный метод нужен исключительно для понимания работы Unit-тестов.
     public void loadDataSync() {
-        if (mMainActivityWeakReference.get() != null) {
-            mMainActivityWeakReference.get().showProgress();
-        }
+        IPackageInstalledView packageInstalledView = mMainActivityWeakReference.get();
+        if (packageInstalledView != null) {
+            packageInstalledView.showProgress();
 
-        List<InstalledPackageModel> data = mPackageInstalledRepository.getData(true);
+            List<InstalledPackageModel> data = mPackageInstalledRepository.getData(true);
 
-        if (mMainActivityWeakReference.get() != null) {
-            mMainActivityWeakReference.get().hideProgress();
+            packageInstalledView.hideProgress();
 
-            mMainActivityWeakReference.get().showData(data);
+            packageInstalledView.showData(data);
         }
     }
 
@@ -48,14 +47,16 @@ public class PackageInstalledPresenter {
      * Метод для загрузки данных в ассинхронном режиме.
      */
     public void loadDataAsync() {
-        if (mMainActivityWeakReference.get() != null) {
-            mMainActivityWeakReference.get().showProgress();
+        IPackageInstalledView packageInstalledView = mMainActivityWeakReference.get();
+        if (packageInstalledView != null) {
+            packageInstalledView.showProgress();
         }
 
         PackageInstalledRepository.OnLoadingFinishListener onLoadingFinishListener = packageModels -> {
-            if (mMainActivityWeakReference.get() != null) {
-                mMainActivityWeakReference.get().hideProgress();
-                mMainActivityWeakReference.get().showData(packageModels);
+            IPackageInstalledView installedView = mMainActivityWeakReference.get();
+            if (installedView != null) {
+                installedView.hideProgress();
+                installedView.showData(packageModels);
             }
         };
 

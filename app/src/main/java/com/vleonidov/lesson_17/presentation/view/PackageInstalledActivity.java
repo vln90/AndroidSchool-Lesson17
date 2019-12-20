@@ -15,6 +15,11 @@ import com.vleonidov.lesson_17.presentation.presenter.PackageInstalledPresenter;
 
 import java.util.List;
 
+/**
+ * Главное активити приложения. Умеет показывать список установленных приложений на телефоне.
+ *
+ * @author Леонидов Василий on 2019-10-31
+ */
 public class PackageInstalledActivity extends AppCompatActivity implements IPackageInstalledView {
 
     private RecyclerView mRecyclerView;
@@ -22,6 +27,9 @@ public class PackageInstalledActivity extends AppCompatActivity implements IPack
 
     private PackageInstalledPresenter mMainPresenter;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +39,9 @@ public class PackageInstalledActivity extends AppCompatActivity implements IPack
         providePresenter();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -38,11 +49,41 @@ public class PackageInstalledActivity extends AppCompatActivity implements IPack
         mMainPresenter.loadDataAsync();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
         mMainPresenter.detachView();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showProgress() {
+        mProgressFrameLayout.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void hideProgress() {
+        mProgressFrameLayout.setVisibility(View.GONE);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showData(@NonNull List<InstalledPackageModel> modelList) {
+        PackageInstalledRecyclerAdapter adapter =
+                new PackageInstalledRecyclerAdapter(modelList);
+
+        mRecyclerView.setAdapter(adapter);
     }
 
     private void providePresenter() {
@@ -60,23 +101,5 @@ public class PackageInstalledActivity extends AppCompatActivity implements IPack
         mRecyclerView.setLayoutManager(layoutManager);
 
         mProgressFrameLayout = findViewById(R.id.progress_frame_layout);
-    }
-
-    @Override
-    public void showProgress() {
-        mProgressFrameLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideProgress() {
-        mProgressFrameLayout.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showData(@NonNull List<InstalledPackageModel> modelList) {
-        PackageInstalledRecyclerAdapter adapter =
-                new PackageInstalledRecyclerAdapter(modelList);
-
-        mRecyclerView.setAdapter(adapter);
     }
 }

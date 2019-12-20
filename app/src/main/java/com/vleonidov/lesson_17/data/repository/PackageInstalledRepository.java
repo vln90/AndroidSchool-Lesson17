@@ -28,17 +28,33 @@ public class PackageInstalledRepository {
     private final Context mContext;
     private final PackageManager mPackageManager;
 
+    /**
+     * Конструктор провайдера данных для установленных приложений.
+     *
+     * @param context {@link Context} контекст для получения зависимости {@link PackageManager}.
+     */
     public PackageInstalledRepository(@NonNull Context context) {
         mContext = context;
 
         mPackageManager = context.getPackageManager();
     }
 
+    /**
+     * Метод для асинхронной загрузки данных об установленных в системе приложениях.
+     *
+     * @param isSystem                {@code true} если необходимо показывать системные приложения, {@code false} иначе.
+     * @param onLoadingFinishListener {@link OnLoadingFinishListener} слушатель окончания загрузки.
+     */
     public void loadDataAsync(boolean isSystem, @NonNull OnLoadingFinishListener onLoadingFinishListener) {
         LoadingPackagesAsyncTask loadingPackagesAsyncTask = new LoadingPackagesAsyncTask(onLoadingFinishListener);
         loadingPackagesAsyncTask.execute(isSystem);
     }
 
+    /**
+     * Метод для синхронной загрузки данных об установленных в системе приложениях.
+     *
+     * @param isSystem {@code true} если необходимо показывать системные приложения, {@code false} иначе.
+     */
     public List<InstalledPackageModel> getData(boolean isSystem) {
         List<InstalledPackageModel> installedPackageModels = new ArrayList<>();
 
@@ -135,7 +151,16 @@ public class PackageInstalledRepository {
         }
     }
 
+    /**
+     * Интерфейс слушателя окончания загрузки данных.
+     */
     public interface OnLoadingFinishListener {
+
+        /**
+         * Метод, вызываемый после окончания загрузки данных.
+         *
+         * @param packageModels {@link List} of {@link InstalledPackageModel} список приложений установленных в системе.
+         */
         void onFinish(List<InstalledPackageModel> packageModels);
     }
 }

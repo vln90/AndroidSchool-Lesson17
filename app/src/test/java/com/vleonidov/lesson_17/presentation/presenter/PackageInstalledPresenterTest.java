@@ -1,8 +1,10 @@
 package com.vleonidov.lesson_17.presentation.presenter;
 
 import com.vleonidov.lesson_17.data.model.InstalledPackageModel;
+import com.vleonidov.lesson_17.data.repository.IPackageInstalledRepository;
 import com.vleonidov.lesson_17.data.repository.PackageInstalledRepository;
 import com.vleonidov.lesson_17.presentation.view.IPackageInstalledView;
+import com.vleonidov.lesson_17.utils.ISchedulersProvider;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +18,9 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.verify;
@@ -32,7 +37,10 @@ public class PackageInstalledPresenterTest {
     private IPackageInstalledView mPackageInstalledView;
 
     @Mock
-    private PackageInstalledRepository mPackageInstalledRepository;
+    private IPackageInstalledRepository mPackageInstalledRepository;
+
+    @Mock
+    private ISchedulersProvider mSchedulersProvider;
 
     private PackageInstalledPresenter mMainPresenter;
 
@@ -41,7 +49,10 @@ public class PackageInstalledPresenterTest {
      */
     @Before
     public void setUp() {
-        mMainPresenter = new PackageInstalledPresenter(mPackageInstalledView, mPackageInstalledRepository);
+        when(mSchedulersProvider.io()).thenReturn(Schedulers.trampoline());
+        when(mSchedulersProvider.ui()).thenReturn(Schedulers.trampoline());
+
+        mMainPresenter = new PackageInstalledPresenter(mPackageInstalledView, mPackageInstalledRepository, mSchedulersProvider);
     }
 
     /**
@@ -50,7 +61,7 @@ public class PackageInstalledPresenterTest {
     @Test
     public void testLoadDataSync() {
         //Создание мока для получения данных из репозитория (необходимо создавать мок до вызова тестируемого метода)
-        when(mPackageInstalledRepository.getData(anyBoolean())).thenReturn(createTestData());
+        when(mPackageInstalledRepository.loadDataSync(anyBoolean())).thenReturn(createTestData());
 
         //Вызов тестируемого метода
         mMainPresenter.loadDataSync();
@@ -69,7 +80,7 @@ public class PackageInstalledPresenterTest {
     @Test
     public void testLoadDataSync_withOrder() {
         //Создание мока для получения данных из репозитория (необходимо создавать мок до вызова тестируемого метода)
-        when(mPackageInstalledRepository.getData(anyBoolean())).thenReturn(createTestData());
+        when(mPackageInstalledRepository.loadDataSync(anyBoolean())).thenReturn(createTestData());
 
         //Вызов тестируемого метода
         mMainPresenter.loadDataSync();
@@ -115,6 +126,24 @@ public class PackageInstalledPresenterTest {
         inOrder.verify(mPackageInstalledView).hideProgress();
         inOrder.verify(mPackageInstalledView).showData(createTestData());
 
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testLoadDataAsyncRx() {
+        //Создание мока для получения данных из репозитория (необходимо создавать мок до вызова тестируемого метода)
+        when(mPackageInstalledRepository.loadDataAsyncRx(anyBoolean())).thenReturn(Single.just(createTestData()));
+
+        mMainPresenter.loadDataAsyncRx(true);
+
+        InOrder inOrder = Mockito.inOrder(mPackageInstalledView);
+
+        //Проверка, что презентер действительно вызывает методы представления, причем в порядке вызова этих методов. Можно сравнить с предыдущим тестом.
+        inOrder.verify(mPackageInstalledView).showProgress();
+        inOrder.verify(mPackageInstalledView).hideProgress();
+        inOrder.verify(mPackageInstalledView).showData(createTestData());
+
+        //Проверка, что никакой метод не будет вызван у mPackageInstalledView.
         inOrder.verifyNoMoreInteractions();
     }
 

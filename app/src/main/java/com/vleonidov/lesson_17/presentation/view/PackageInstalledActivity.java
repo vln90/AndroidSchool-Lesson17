@@ -5,13 +5,18 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.vleonidov.lesson_17.R;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.vleonidov.lesson_17.data.model.InstalledPackageModel;
+import com.vleonidov.lesson_17.data.provider.PackageInstalledProvider;
+import com.vleonidov.lesson_17.data.repository.IPackageInstalledRepository;
 import com.vleonidov.lesson_17.data.repository.PackageInstalledRepository;
+import com.vleonidov.lesson_17.databinding.ActivityMainBinding;
 import com.vleonidov.lesson_17.presentation.presenter.PackageInstalledPresenter;
+import com.vleonidov.lesson_17.presentation.view.adapter.PackageInstalledRecyclerAdapter;
+import com.vleonidov.lesson_17.utils.ISchedulersProvider;
+import com.vleonidov.lesson_17.utils.SchedulersProvider;
 
 import java.util.List;
 
@@ -22,10 +27,9 @@ import java.util.List;
  */
 public class PackageInstalledActivity extends AppCompatActivity implements IPackageInstalledView {
 
-    private RecyclerView mRecyclerView;
-    private View mProgressFrameLayout;
-
     private PackageInstalledPresenter mMainPresenter;
+
+    private ActivityMainBinding mBinding;
 
     /**
      * {@inheritDoc}
@@ -33,9 +37,10 @@ public class PackageInstalledActivity extends AppCompatActivity implements IPack
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        initViews();
+        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
+
         providePresenter();
     }
 
@@ -46,7 +51,7 @@ public class PackageInstalledActivity extends AppCompatActivity implements IPack
     protected void onStart() {
         super.onStart();
 
-        mMainPresenter.loadDataAsync();
+        mMainPresenter.loadDataAsyncRx(true);
     }
 
     /**
@@ -64,7 +69,7 @@ public class PackageInstalledActivity extends AppCompatActivity implements IPack
      */
     @Override
     public void showProgress() {
-        mProgressFrameLayout.setVisibility(View.VISIBLE);
+        mBinding.progressBar.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -72,7 +77,7 @@ public class PackageInstalledActivity extends AppCompatActivity implements IPack
      */
     @Override
     public void hideProgress() {
-        mProgressFrameLayout.setVisibility(View.GONE);
+        mBinding.progressBar.setVisibility(View.GONE);
     }
 
     /**
@@ -83,23 +88,23 @@ public class PackageInstalledActivity extends AppCompatActivity implements IPack
         PackageInstalledRecyclerAdapter adapter =
                 new PackageInstalledRecyclerAdapter(modelList);
 
-        mRecyclerView.setAdapter(adapter);
+        mBinding.recyclerView.setAdapter(adapter);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showError(@NonNull Throwable throwable) {
+        Snackbar.make(mBinding.getRoot(), throwable.toString(), BaseTransientBottomBar.LENGTH_LONG).show();
     }
 
     private void providePresenter() {
-        PackageInstalledRepository packageInstalledRepository =
-                new PackageInstalledRepository(this);
+        PackageInstalledProvider packageInstalledProvider = new PackageInstalledProvider(this);
+        IPackageInstalledRepository packageInstalledRepository =
+                new PackageInstalledRepository(packageInstalledProvider);
+        ISchedulersProvider schedulersProvider = new SchedulersProvider();
 
-        mMainPresenter = new PackageInstalledPresenter(this, packageInstalledRepository);
-    }
-
-    private void initViews() {
-        LinearLayoutManager layoutManager = new
-                LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-
-        mRecyclerView = findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(layoutManager);
-
-        mProgressFrameLayout = findViewById(R.id.progress_frame_layout);
+        mMainPresenter = new PackageInstalledPresenter(this, packageInstalledRepository, schedulersProvider);
     }
 }

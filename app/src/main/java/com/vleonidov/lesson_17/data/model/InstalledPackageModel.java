@@ -11,11 +11,9 @@ import androidx.annotation.NonNull;
  */
 public class InstalledPackageModel {
 
-    private String mAppName;
-
-    private String mAppPackageName;
-
-    private Drawable mAppIcon;
+    private final String mAppName;
+    private final String mAppPackageName;
+    private final Drawable mAppIcon;
 
     /**
      * Конструктор модели.

@@ -1,4 +1,4 @@
-package com.vleonidov.lesson_17.presentation.view;
+package com.vleonidov.lesson_17.presentation.view.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +15,7 @@ import com.vleonidov.lesson_17.data.model.InstalledPackageModel;
 
 import java.util.List;
 
-import static com.vleonidov.lesson_17.presentation.view.PackageInstalledRecyclerAdapter.PackageInstalledViewHolder;
+import static com.vleonidov.lesson_17.presentation.view.adapter.PackageInstalledRecyclerAdapter.PackageInstalledViewHolder;
 
 /**
  * Адаптер для отображения элементов списка.
@@ -24,9 +24,9 @@ import static com.vleonidov.lesson_17.presentation.view.PackageInstalledRecycler
  */
 public class PackageInstalledRecyclerAdapter extends Adapter<PackageInstalledViewHolder> {
 
-    private List<InstalledPackageModel> mInstalledPackageModelList;
+    private final List<InstalledPackageModel> mInstalledPackageModelList;
 
-    PackageInstalledRecyclerAdapter(@NonNull List<InstalledPackageModel> installedPackageModelList) {
+    public PackageInstalledRecyclerAdapter(@NonNull List<InstalledPackageModel> installedPackageModelList) {
         mInstalledPackageModelList = installedPackageModelList;
     }
 
@@ -50,9 +50,9 @@ public class PackageInstalledRecyclerAdapter extends Adapter<PackageInstalledVie
 
     static class PackageInstalledViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mAppTextView;
-        private TextView mPackageNameTextView;
-        private ImageView mIconImageView;
+        private final TextView mAppTextView;
+        private final TextView mPackageNameTextView;
+        private final ImageView mIconImageView;
 
         PackageInstalledViewHolder(@NonNull View itemView) {
             super(itemView);

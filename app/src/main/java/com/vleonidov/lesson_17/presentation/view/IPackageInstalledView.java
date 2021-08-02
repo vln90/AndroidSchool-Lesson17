@@ -29,4 +29,11 @@ public interface IPackageInstalledView {
      * @param modelList список приложений.
      */
     void showData(@NonNull List<InstalledPackageModel> modelList);
+
+    /**
+     * Отобразить ошибку при получении данных.
+     *
+     * @param throwable возникшая ошибка при получении данных.
+     */
+    void showError(@NonNull Throwable throwable);
 }

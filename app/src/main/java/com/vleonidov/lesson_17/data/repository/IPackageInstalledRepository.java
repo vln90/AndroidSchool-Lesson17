@@ -31,6 +31,14 @@ public interface IPackageInstalledRepository {
     Single<List<InstalledPackageModel>> loadDataAsyncRx(boolean isSystem);
 
     /**
+     * Метод для получения данных по выбранному пакету.
+     *
+     * @param packageName имя пакета.
+     * @return Single с моделью описания выбранного пакета.
+     */
+    Single<InstalledPackageModel> loadDataByPackageName(@NonNull String packageName);
+
+    /**
      * Метод для асинхронной загрузки данных об установленных в системе приложениях.
      *
      * @param isSystem                {@code true} если необходимо показывать системные приложения, {@code false} иначе.

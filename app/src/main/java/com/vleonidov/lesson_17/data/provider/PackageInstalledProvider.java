@@ -58,6 +58,17 @@ public class PackageInstalledProvider {
         return installedPackageModels;
     }
 
+    /**
+     * Метод для получения данных по выбранному пакету.
+     *
+     * @param packageName имя пакета.
+     * @return модель описания выбранного пакета.
+     */
+    public InstalledPackageModel getPackageDetailModel(@NonNull String packageName) {
+        return new InstalledPackageModel(
+                getAppName(packageName), packageName, getAppIcon(packageName));
+    }
+
     private List<String> getInstalledPackages(boolean isSystem) {
         List<String> apkPackageName = new ArrayList<>();
 

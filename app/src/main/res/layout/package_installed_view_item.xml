@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     android:layout_margin="@dimen/padding_small"
     app:cardCornerRadius="@dimen/corner_radius"
     app:elevation="@dimen/elevation_medium">
@@ -12,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="?attr/selectableItemBackground"
         android:padding="@dimen/padding_small">
 
         <ImageView

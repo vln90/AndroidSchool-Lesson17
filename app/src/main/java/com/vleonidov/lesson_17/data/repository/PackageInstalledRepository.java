@@ -44,6 +44,11 @@ public class PackageInstalledRepository implements IPackageInstalledRepository {
     }
 
     @Override
+    public Single<InstalledPackageModel> loadDataByPackageName(@NonNull String packageName) {
+        return Single.fromCallable(() -> mPackageInstalledProvider.getPackageDetailModel(packageName));
+    }
+
+    @Override
     public void loadDataAsync(boolean isSystem, @NonNull OnLoadingFinishListener onLoadingFinishListener) {
         LoadingPackagesAsyncTask loadingPackagesAsyncTask = new LoadingPackagesAsyncTask(onLoadingFinishListener, mPackageInstalledProvider);
         loadingPackagesAsyncTask.execute(isSystem);

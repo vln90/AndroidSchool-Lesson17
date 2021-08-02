@@ -1,5 +1,6 @@
 package com.vleonidov.lesson_17.presentation.view.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter;
 import com.vleonidov.lesson_17.R;
 import com.vleonidov.lesson_17.data.model.InstalledPackageModel;
 import com.vleonidov.lesson_17.databinding.PackageInstalledViewItemBinding;
+import com.vleonidov.lesson_17.presentation.detail.view.PackageDetailActivity;
 
 import java.util.List;
 
@@ -61,6 +63,12 @@ public class PackageInstalledRecyclerAdapter extends Adapter<PackageInstalledVie
             mBinding.appNameTextView.setText(installedPackageModel.getAppName());
             mBinding.appPackageTextView.setText(installedPackageModel.getAppPackageName());
             mBinding.appIconImageView.setImageDrawable(installedPackageModel.getAppIcon());
+
+            mBinding.getRoot().setOnClickListener(v -> {
+                //роутингу здесь не место, но для примера оставим тут
+                Intent intent = PackageDetailActivity.newIntent(v.getContext(), installedPackageModel.getAppPackageName());
+                v.getContext().startActivity(intent);
+            });
         }
     }
 }

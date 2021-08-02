@@ -3,8 +3,6 @@ package com.vleonidov.lesson_17.presentation.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import com.vleonidov.lesson_17.R;
 import com.vleonidov.lesson_17.data.model.InstalledPackageModel;
+import com.vleonidov.lesson_17.databinding.PackageInstalledViewItemBinding;
 
 import java.util.List;
 
@@ -50,22 +49,18 @@ public class PackageInstalledRecyclerAdapter extends Adapter<PackageInstalledVie
 
     static class PackageInstalledViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView mAppTextView;
-        private final TextView mPackageNameTextView;
-        private final ImageView mIconImageView;
+        private final PackageInstalledViewItemBinding mBinding;
 
         PackageInstalledViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            mAppTextView = itemView.findViewById(R.id.app_name_text_view);
-            mPackageNameTextView = itemView.findViewById(R.id.app_package_text_view);
-            mIconImageView = itemView.findViewById(R.id.app_icon_image_view);
+            mBinding = PackageInstalledViewItemBinding.bind(itemView);
         }
 
         void bindView(@NonNull InstalledPackageModel installedPackageModel) {
-            mAppTextView.setText(installedPackageModel.getAppName());
-            mPackageNameTextView.setText(installedPackageModel.getAppPackageName());
-            mIconImageView.setImageDrawable(installedPackageModel.getAppIcon());
+            mBinding.appNameTextView.setText(installedPackageModel.getAppName());
+            mBinding.appPackageTextView.setText(installedPackageModel.getAppPackageName());
+            mBinding.appIconImageView.setImageDrawable(installedPackageModel.getAppIcon());
         }
     }
 }

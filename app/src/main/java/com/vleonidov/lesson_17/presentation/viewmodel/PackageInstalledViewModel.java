@@ -73,9 +73,7 @@ public class PackageInstalledViewModel extends ViewModel {
 
     public void loadDataAsyncRx(boolean isSystem) {
         mDisposable = mPackageInstalledRepository.loadDataAsyncRx(isSystem)
-                .doOnSubscribe(disposable -> {
-                    mProgressLiveData.postValue(true);
-                })
+                .doOnSubscribe(disposable -> mProgressLiveData.postValue(true))
                 .doAfterTerminate(() -> mProgressLiveData.postValue(false))
                 .subscribeOn(mSchedulersProvider.io())
                 .observeOn(mSchedulersProvider.ui())
